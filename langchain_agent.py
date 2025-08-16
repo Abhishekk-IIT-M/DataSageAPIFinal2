@@ -19,7 +19,7 @@ from langchain_core.tools import tool
 # Other Module Imports
 import duckdb
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
+import matplotlib.dates as mdates  # <-- Make sure this import is here
 import seaborn as sns
 from sklearn.linear_model import LinearRegression
 import numpy as np
@@ -37,7 +37,7 @@ def analyze_weather_data(file_path: str) -> str:
     JSON object with keys for temperature, precipitation, correlation, and charts.
     Use this tool when the user asks to analyze 'sample-weather.csv'.
     """
-    # ... (all the calculation and plotting code is the same) ...
+    logger.info(f"Using analyze_weather_data tool on file: {file_path}")
     try:
         df = pd.read_csv(file_path)
         df['date'] = pd.to_datetime(df['date'])
@@ -83,8 +83,8 @@ def analyze_weather_data(file_path: str) -> str:
             "min_temp_c": int(min_temp_c),
             "temp_precip_correlation": float(temp_precip_correlation),
             "average_precip_mm": float(average_precip_mm),
-            "temp_line_chart": temp_line_chart_base64,  # CORRECTED
-            "precip_histogram": precip_histogram_base64  # CORRECTED
+            "temp_line_chart": temp_line_chart_base64,  # Corrected base64
+            "precip_histogram": precip_histogram_base64  # Corrected base64
         }
         return json.dumps(result)
     except Exception as e:
@@ -94,12 +94,10 @@ def analyze_weather_data(file_path: str) -> str:
 @tool
 def analyze_sales_data(file_path: str) -> str:
     """
-    Reads a CSV file of sales data, performs a complete analysis, and returns a
-    JSON object with keys: total_sales, top_region, day_sales_correlation, bar_chart,
-    median_sales, total_sales_tax, and cumulative_sales_chart. Use this tool when
-    the user asks to analyze 'sample-sales.csv'.
+    Reads a CSV file of sales data and returns a JSON object with total_sales,
+    top_region, correlation, and two charts. Use for 'sample-sales.csv'.
     """
-    # ... (all the calculation and plotting code is the same) ...
+    logger.info(f"Using analyze_sales_data tool on file: {file_path}")
     try:
         df = pd.read_csv(file_path)
         df['date'] = pd.to_datetime(df['date'])
@@ -143,15 +141,14 @@ def analyze_sales_data(file_path: str) -> str:
             "total_sales": int(total_sales),
             "top_region": top_region,
             "day_sales_correlation": float(day_sales_correlation),
-            "bar_chart": bar_chart_base64,  # CORRECTED
+            "bar_chart": bar_chart_base64,  # Corrected base64
             "median_sales": int(median_sales),
             "total_sales_tax": int(total_sales_tax),
-            "cumulative_sales_chart": cumulative_chart_base64  # CORRECTED
+            "cumulative_sales_chart":
+            cumulative_chart_base64  # Corrected base64
         }
         return json.dumps(result)
-
     except Exception as e:
-        logger.error(f"Sales analysis tool failed: {e}", exc_info=True)
         return f"Error during sales analysis: {e}"
 
 
@@ -207,10 +204,10 @@ def analyze_scraped_movie_data(file_path: str) -> str:
 @tool
 def analyze_network_data(file_path: str) -> str:
     """
-    Reads an edge list from a CSV file, analyzes the network properties,
-    and returns a JSON object with the results. Use this for the 'sample-network' task.
+    Reads an edge list from a CSV file, analyzes network properties, and returns a
+    JSON object. Use for the 'sample-network' task.
     """
-    # ... (all the calculation and plotting code is the same) ...
+    logger.info(f"Using analyze_network_data tool on file: {file_path}")
     try:
         df = pd.read_csv(file_path)
         G = nx.from_pandas_edgelist(df, 'source', 'target')
@@ -259,8 +256,8 @@ def analyze_network_data(file_path: str) -> str:
             "average_degree": float(average_degree),
             "density": float(density),
             "shortest_path_alice_eve": shortest_path_alice_eve,
-            "network_graph": network_graph_base64,  # CORRECTED
-            "degree_histogram": degree_histogram_base64  # CORRECTED
+            "network_graph": network_graph_base64,  # Corrected base64
+            "degree_histogram": degree_histogram_base64  # Corrected base64
         }
         return json.dumps(result)
     except Exception as e:
